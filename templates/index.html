@@ -1,0 +1,634 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="mobile-responsive-container">
+    <div class="hero-section mobile-hero" id="hero">
+        <div class="hero-content mobile-hero-content">
+            <h1 class="hero-title animated-title">
+                <span class="title-gradient animate-slide-up">My Tasks</span>
+                <span class="title-accent animate-slide-up-delay">Dashboard</span>
+                <div class="title-underline"></div>
+            </h1>
+            <p class="hero-subtitle simple-subtitle">
+                Stay organized and boost your productivity with our
+                <span class="highlight-text">modern task management system</span>
+            </p>
+        </div>
+    </div>
+
+    <!-- Mobile-Optimized Content Grid -->
+    <div class="content-grid mobile-content-grid" id="tasks">
+        <div class="main-column mobile-main-column">
+
+            <!-- Mobile-Optimized Add Task Form -->
+            <div class="modern-card glass-card mobile-task-form mb-3 mb-md-4">
+                <div class="card-header-modern mobile-card-header">
+                    <div class="header-icon mobile-header-icon">
+                        <i class="bi bi-plus-circle-fill" aria-hidden="true"></i>
+                    </div>
+                    <h5 class="header-title mobile-header-title">Create New Task</h5>
+                    <div class="header-accent mobile-header-accent"></div>
+                </div>
+                <div class="card-body-modern">
+                    <form method="POST" action="{{ url_for('add_task') }}" class="modern-form">
+                        <div class="form-group-modern">
+                            <div class="input-wrapper">
+                                <input type="text" class="modern-input" id="title" name="title" required>
+                                <label for="title" class="modern-label">Task Title</label>
+                                <div class="input-border"></div>
+                            </div>
+                        </div>
+                        <div class="form-group-modern">
+                            <div class="input-wrapper">
+                                <textarea class="modern-input modern-textarea" id="description" name="description" rows="3"></textarea>
+                                <label for="description" class="modern-label">Description (Optional)</label>
+                                <div class="input-border"></div>
+                            </div>
+                        </div>
+                        <button type="submit" class="modern-btn btn-primary-modern">
+                            <span class="btn-icon">
+                                <i class="bi bi-plus-lg"></i>
+                            </span>
+                            <span class="btn-text">Add Task</span>
+                            <div class="btn-ripple"></div>
+                        </button>
+                    </form>
+                </div>
+            </div>
+
+            <!-- Ultra-Modern Statistics Dashboard -->
+            {% set total_tasks = tasks|length %}
+            {% set completed_tasks = tasks|selectattr('completed')|list|length %}
+            {% set pending_tasks = total_tasks - completed_tasks %}
+            {% set completion_rate = (completed_tasks / total_tasks * 100) if total_tasks > 0 else 0 %}
+
+            <!-- Mobile-Optimized Analytics Dashboard -->
+            <div class="analytics-dashboard mobile-analytics mb-3 mb-md-4">
+                <!-- Mobile Dashboard Header -->
+                <div class="dashboard-header mobile-dashboard-header">
+                    <div class="header-content mobile-header-content">
+                        <h3 class="dashboard-title mobile-dashboard-title">
+                            <span class="title-icon mobile-title-icon" aria-hidden="true">📊</span>
+                            <span class="title-text">Task Analytics</span>
+                        </h3>
+                        <p class="dashboard-subtitle mobile-dashboard-subtitle">Track your productivity and progress</p>
+                    </div>
+                    <div class="completion-indicator">
+                        <div class="completion-circle">
+                            <svg class="completion-svg" viewBox="0 0 36 36">
+                                <defs>
+                                    <linearGradient id="completionGradient" x1="0%" y1="0%" x2="100%" y2="0%">
+                                        <stop offset="0%" style="stop-color:#667eea;stop-opacity:1" />
+                                        <stop offset="100%" style="stop-color:#764ba2;stop-opacity:1" />
+                                    </linearGradient>
+                                </defs>
+                                <path class="circle-bg" d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831"></path>
+                                <path class="circle-progress" stroke-dasharray="{{ completion_rate }}, 100" d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831"></path>
+                            </svg>
+                            <div class="completion-text">
+                                <span class="completion-percentage">{{ "%.0f"|format(completion_rate) }}%</span>
+                                <span class="completion-label">Done</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Mobile-Optimized Statistics Cards -->
+                <div class="premium-stats-grid mobile-stats-grid">
+                    <!-- Mobile Total Tasks Card -->
+                    <div class="premium-stat-card total-card mobile-stat-card" data-count="{{ total_tasks }}" role="region" aria-label="Total tasks statistics">
+                        <div class="card-header-section">
+                            <div class="stat-icon-wrapper">
+                                <div class="premium-stat-icon total-theme">
+                                    <div class="icon-background"></div>
+                                    <i class="bi bi-kanban"></i>
+                                    <div class="icon-glow"></div>
+                                </div>
+                            </div>
+                            <div class="card-actions">
+                                <button class="action-btn" title="View Details">
+                                    <i class="bi bi-three-dots"></i>
+                                </button>
+                            </div>
+                        </div>
+
+                        <div class="stat-main-content">
+                            <div class="stat-number-section">
+                                <span class="premium-stat-number" data-target="{{ total_tasks }}">0</span>
+                            </div>
+
+                            <div class="stat-info-section">
+                                <h4 class="stat-title">Total Tasks</h4>
+                                <p class="stat-subtitle">All tasks created</p>
+                                <div class="stat-meta">
+                                    <span class="meta-badge">
+                                        <i class="bi bi-calendar-check"></i>
+                                        Lifetime
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="card-footer-section">
+                            <div class="progress-container">
+                                <div class="progress-info">
+                                    <span class="progress-label">Capacity</span>
+                                    <span class="progress-percentage">{{ (total_tasks / 20 * 100) if total_tasks <= 20 else 100 }}%</span>
+                                </div>
+                                <div class="premium-progress-bar">
+                                    <div class="progress-track"></div>
+                                    <div class="progress-fill total-fill" style="width: {{ (total_tasks / 20 * 100) if total_tasks <= 20 else 100 }}%"></div>
+                                    <div class="progress-glow total-glow"></div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="card-background-pattern">
+                            <div class="pattern-element"></div>
+                            <div class="pattern-element"></div>
+                            <div class="pattern-element"></div>
+                        </div>
+                    </div>
+
+                    <!-- Mobile Pending Tasks Card -->
+                    <div class="premium-stat-card pending-card mobile-stat-card" data-count="{{ pending_tasks }}" role="region" aria-label="Pending tasks statistics">
+                        <div class="card-header-section">
+                            <div class="stat-icon-wrapper">
+                                <div class="premium-stat-icon pending-theme">
+                                    <div class="icon-background"></div>
+                                    <i class="bi bi-hourglass-split"></i>
+                                    <div class="icon-glow"></div>
+                                </div>
+                            </div>
+                            <div class="card-actions">
+                                <button class="action-btn" title="View Details">
+                                    <i class="bi bi-three-dots"></i>
+                                </button>
+                            </div>
+                        </div>
+
+                        <div class="stat-main-content">
+                            <div class="stat-number-section">
+                                <span class="premium-stat-number" data-target="{{ pending_tasks }}">0</span>
+                            </div>
+
+                            <div class="stat-info-section">
+                                <h4 class="stat-title">Pending</h4>
+                                <p class="stat-subtitle">Tasks in progress</p>
+                                <div class="stat-meta">
+                                    <span class="meta-badge warning">
+                                        <i class="bi bi-clock"></i>
+                                        Active
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="card-footer-section">
+                            <div class="progress-container">
+                                <div class="progress-info">
+                                    <span class="progress-label">Of Total</span>
+                                    <span class="progress-percentage">{{ (pending_tasks / total_tasks * 100) if total_tasks > 0 else 0 }}%</span>
+                                </div>
+                                <div class="premium-progress-bar">
+                                    <div class="progress-track"></div>
+                                    <div class="progress-fill pending-fill" style="width: {{ (pending_tasks / total_tasks * 100) if total_tasks > 0 else 0 }}%"></div>
+                                    <div class="progress-glow pending-glow"></div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="card-background-pattern">
+                            <div class="pattern-element"></div>
+                            <div class="pattern-element"></div>
+                            <div class="pattern-element"></div>
+                        </div>
+                    </div>
+
+                    <!-- Mobile Completed Tasks Card -->
+                    <div class="premium-stat-card completed-card mobile-stat-card" data-count="{{ completed_tasks }}" role="region" aria-label="Completed tasks statistics">
+                        <div class="card-header-section">
+                            <div class="stat-icon-wrapper">
+                                <div class="premium-stat-icon completed-theme">
+                                    <div class="icon-background"></div>
+                                    <i class="bi bi-check-circle-fill"></i>
+                                    <div class="icon-glow"></div>
+                                </div>
+                            </div>
+                            <div class="card-actions">
+                                <button class="action-btn" title="View Details">
+                                    <i class="bi bi-three-dots"></i>
+                                </button>
+                            </div>
+                        </div>
+
+                        <div class="stat-main-content">
+                            <div class="stat-number-section">
+                                <span class="premium-stat-number" data-target="{{ completed_tasks }}">0</span>
+                            </div>
+
+                            <div class="stat-info-section">
+                                <h4 class="stat-title">Completed</h4>
+                                <p class="stat-subtitle">Successfully finished</p>
+                                <div class="stat-meta">
+                                    <span class="meta-badge success">
+                                        <i class="bi bi-trophy"></i>
+                                        {{ "%.0f"|format(completion_rate) }}% Done
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="card-footer-section">
+                            <div class="progress-container">
+                                <div class="progress-info">
+                                    <span class="progress-label">Completion</span>
+                                    <span class="progress-percentage">{{ "%.0f"|format(completion_rate) }}%</span>
+                                </div>
+                                <div class="premium-progress-bar">
+                                    <div class="progress-track"></div>
+                                    <div class="progress-fill completed-fill" style="width: {{ completion_rate }}%"></div>
+                                    <div class="progress-glow completed-glow"></div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="card-background-pattern">
+                            <div class="pattern-element"></div>
+                            <div class="pattern-element"></div>
+                            <div class="pattern-element"></div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Quick Insights -->
+                <div class="insights-section">
+                    <div class="insight-card">
+                        <div class="insight-icon">
+                            <i class="bi bi-trophy"></i>
+                        </div>
+                        <div class="insight-content">
+                            <h4 class="insight-title">Productivity Score</h4>
+                            <div class="insight-score">
+                                <div class="score-bar">
+                                    <div class="score-fill" style="width: {{ completion_rate }}%"></div>
+                                </div>
+                                <span class="score-value">{{ "%.0f"|format(completion_rate) }}%</span>
+                            </div>
+                            <p class="insight-description">
+                                {% if completion_rate >= 80 %}
+                                    🎉 Excellent! You're crushing your goals!
+                                {% elif completion_rate >= 60 %}
+                                    👍 Great progress! Keep it up!
+                                {% elif completion_rate >= 40 %}
+                                    💪 Good momentum! You're on track!
+                                {% elif completion_rate > 0 %}
+                                    🚀 Getting started! Every task counts!
+                                {% else %}
+                                    ✨ Ready to begin your productivity journey?
+                                {% endif %}
+                            </p>
+                        </div>
+                    </div>
+
+                    {% if total_tasks > 0 %}
+                    <div class="insight-card">
+                        <div class="insight-icon">
+                            <i class="bi bi-graph-up"></i>
+                        </div>
+                        <div class="insight-content">
+                            <h4 class="insight-title">Progress Breakdown</h4>
+                            <div class="progress-breakdown">
+                                <div class="breakdown-item">
+                                    <span class="breakdown-label">Completed</span>
+                                    <span class="breakdown-value">{{ completed_tasks }}/{{ total_tasks }}</span>
+                                </div>
+                                <div class="breakdown-item">
+                                    <span class="breakdown-label">Remaining</span>
+                                    <span class="breakdown-value">{{ pending_tasks }} tasks</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    {% endif %}
+                </div>
+            </div>
+
+            <!-- Mobile-Optimized Task Board -->
+            <div class="task-board mobile-task-board">
+                <div class="board-header mobile-board-header">
+                    <div class="board-title mobile-board-title">
+                        <h3>Tasks</h3>
+                        <span class="task-counter mobile-task-counter">{{ tasks|length }} items</span>
+                    </div>
+                    <div class="board-actions mobile-board-actions">
+                        <button class="view-toggle active mobile-view-toggle" data-view="list" aria-label="List view">
+                            <i class="bi bi-list-ul" aria-hidden="true"></i>
+                        </button>
+                        <button class="view-toggle mobile-view-toggle" data-view="grid" aria-label="Grid view">
+                            <i class="bi bi-grid-3x3-gap" aria-hidden="true"></i>
+                        </button>
+                    </div>
+                </div>
+
+                {% if tasks %}
+                    <div class="tasks-grid mobile-tasks-grid" id="tasksContainer">
+                        {% for task in tasks %}
+                        <div class="task-card mobile-task-card {% if task.completed %}completed{% endif %}" data-task-id="{{ task.id }}" role="article" aria-label="Task: {{ task.title }}">
+                            <div class="task-header">
+                                <div class="task-status">
+                                    {% if not task.completed %}
+                                        <a href="{{ url_for('complete_task', task_id=task.id) }}" class="status-btn pending">
+                                            <i class="bi bi-circle"></i>
+                                        </a>
+                                    {% else %}
+                                        <a href="{{ url_for('uncomplete_task', task_id=task.id) }}" class="status-btn completed">
+                                            <i class="bi bi-check-circle-fill"></i>
+                                        </a>
+                                    {% endif %}
+                                </div>
+                                <div class="task-menu">
+                                    <button class="menu-btn" onclick="toggleMenu({{ task.id }})">
+                                        <i class="bi bi-three-dots"></i>
+                                    </button>
+                                    <div class="task-dropdown" id="menu-{{ task.id }}">
+                                        {% if not task.completed %}
+                                            <a href="{{ url_for('complete_task', task_id=task.id) }}" class="dropdown-option">
+                                                <i class="bi bi-check-circle"></i>
+                                                <span>Complete</span>
+                                            </a>
+                                        {% else %}
+                                            <a href="{{ url_for('uncomplete_task', task_id=task.id) }}" class="dropdown-option">
+                                                <i class="bi bi-arrow-counterclockwise"></i>
+                                                <span>Reopen</span>
+                                            </a>
+                                        {% endif %}
+                                        <a href="{{ url_for('delete_task', task_id=task.id) }}"
+                                           class="dropdown-option delete"
+                                           onclick="return confirm('Delete this task?')">
+                                            <i class="bi bi-trash"></i>
+                                            <span>Delete</span>
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="task-body">
+                                <h4 class="task-name">{{ task.title }}</h4>
+                                {% if task.description %}
+                                    <p class="task-desc">{{ task.description }}</p>
+                                {% endif %}
+                            </div>
+
+                            <div class="task-footer">
+                                <div class="task-date">
+                                    <i class="bi bi-calendar-event"></i>
+                                    <span>{{ task.created_at.split(' ')[0] }}</span>
+                                </div>
+                                <div class="task-priority">
+                                    <span class="priority-dot"></span>
+                                </div>
+                            </div>
+                        </div>
+                        {% endfor %}
+                    </div>
+                {% else %}
+                    <div class="empty-board mobile-empty-board">
+                        <div class="empty-illustration mobile-empty-illustration">
+                            <div class="empty-circle mobile-empty-circle">
+                                <i class="bi bi-plus-lg" aria-hidden="true"></i>
+                            </div>
+                        </div>
+                        <h3 class="empty-title mobile-empty-title">No tasks yet</h3>
+                        <p class="empty-description mobile-empty-description">Create your first task to get started with your productivity journey</p>
+                        <div class="empty-suggestions mobile-empty-suggestions">
+                            <div class="suggestion mobile-suggestion">💡 Try: "Review weekly goals"</div>
+                            <div class="suggestion mobile-suggestion">🚀 Or: "Plan next project"</div>
+                        </div>
+                    </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+    // Mobile-optimized animated number counting
+    function animateNumbers() {
+        const numbers = document.querySelectorAll('.premium-stat-number');
+        const isMobile = window.innerWidth <= 768;
+        const duration = isMobile ? 1500 : 2000; // Faster on mobile
+
+        numbers.forEach(number => {
+            const target = parseInt(number.getAttribute('data-target'));
+            const increment = target / (duration / 16);
+            let current = 0;
+
+            const timer = setInterval(() => {
+                current += increment;
+                if (current >= target) {
+                    current = target;
+                    clearInterval(timer);
+                }
+                number.textContent = Math.floor(current);
+            }, 16);
+        });
+    }
+
+    // Simple fade-in animation for subtitle
+    function initSimpleAnimation() {
+        const subtitle = document.querySelector('.simple-subtitle');
+        if (subtitle) {
+            subtitle.style.opacity = '0';
+            subtitle.style.transform = 'translateY(20px)';
+
+            setTimeout(() => {
+                subtitle.style.transition = 'all 0.8s ease';
+                subtitle.style.opacity = '1';
+                subtitle.style.transform = 'translateY(0)';
+            }, 1000);
+        }
+    }
+
+    // Mobile-optimized initialization
+    document.addEventListener('DOMContentLoaded', function() {
+        const isMobile = window.innerWidth <= 768;
+
+        // Initialize simple animation
+        initSimpleAnimation();
+
+        // Animate numbers with delay
+        setTimeout(animateNumbers, isMobile ? 300 : 500);
+
+        // Add staggered animation to premium cards
+        const premiumCards = document.querySelectorAll('.premium-stat-card');
+        premiumCards.forEach((card, index) => {
+            const delay = isMobile ? index * 0.1 : index * 0.15;
+            card.style.animationDelay = `${delay}s`;
+            card.style.animation = 'slideInUp 0.8s ease forwards';
+        });
+
+        // Animate insight cards
+        const insightCards = document.querySelectorAll('.insight-card');
+        insightCards.forEach((card, index) => {
+            const delay = isMobile ? (index + 2) * 0.1 : (index + 3) * 0.15;
+            card.style.animationDelay = `${delay}s`;
+            card.style.animation = 'slideInUp 0.8s ease forwards';
+        });
+
+        // Mobile-optimized interaction effects
+        premiumCards.forEach(card => {
+            if (isMobile) {
+                // Touch-based interactions for mobile
+                card.addEventListener('touchstart', function() {
+                    const icon = this.querySelector('.premium-stat-icon');
+                    if (icon) {
+                        icon.style.transform = 'scale(1.05) rotate(2deg)';
+                    }
+                });
+
+                card.addEventListener('touchend', function() {
+                    const icon = this.querySelector('.premium-stat-icon');
+                    if (icon) {
+                        icon.style.transform = 'scale(1) rotate(0deg)';
+                    }
+                });
+            } else {
+                // Desktop hover effects
+                card.addEventListener('mouseenter', function() {
+                    const icon = this.querySelector('.premium-stat-icon');
+                    if (icon) {
+                        icon.style.transform = 'scale(1.1) rotate(5deg)';
+                    }
+                });
+
+                card.addEventListener('mouseleave', function() {
+                    const icon = this.querySelector('.premium-stat-icon');
+                    if (icon) {
+                        icon.style.transform = 'scale(1) rotate(0deg)';
+                    }
+                });
+            }
+        });
+
+        // Mobile task card interactions
+        const taskCards = document.querySelectorAll('.task-card');
+        taskCards.forEach(card => {
+            if (isMobile) {
+                card.addEventListener('touchstart', function() {
+                    this.style.transform = 'translateY(-1px)';
+                });
+
+                card.addEventListener('touchend', function() {
+                    this.style.transform = 'translateY(0)';
+                });
+            }
+        });
+
+        // Mobile view toggle optimization
+        const viewToggles = document.querySelectorAll('.view-toggle');
+        viewToggles.forEach(toggle => {
+            toggle.addEventListener('click', function() {
+                viewToggles.forEach(t => t.classList.remove('active'));
+                this.classList.add('active');
+
+                const view = this.getAttribute('data-view');
+                const tasksContainer = document.getElementById('tasksContainer');
+
+                if (tasksContainer) {
+                    if (view === 'grid') {
+                        tasksContainer.classList.add('grid-view');
+                    } else {
+                        tasksContainer.classList.remove('grid-view');
+                    }
+                }
+            });
+        });
+    });
+
+    // Toggle dropdown menu
+    function toggleMenu(taskId) {
+        const dropdown = document.getElementById('menu-' + taskId);
+        const isVisible = dropdown.style.display === 'block';
+
+        // Hide all dropdowns first
+        document.querySelectorAll('.task-dropdown').forEach(menu => {
+            menu.style.display = 'none';
+        });
+
+        // Toggle current dropdown
+        dropdown.style.display = isVisible ? 'none' : 'block';
+    }
+
+    // Close dropdowns when clicking outside
+    document.addEventListener('click', function(event) {
+        if (!event.target.closest('.task-menu')) {
+            document.querySelectorAll('.task-dropdown').forEach(menu => {
+                menu.style.display = 'none';
+            });
+        }
+    });
+
+    // View toggle functionality
+    document.querySelectorAll('.view-toggle').forEach(button => {
+        button.addEventListener('click', function() {
+            // Remove active class from all buttons
+            document.querySelectorAll('.view-toggle').forEach(btn => {
+                btn.classList.remove('active');
+            });
+
+            // Add active class to clicked button
+            this.classList.add('active');
+
+            const view = this.dataset.view;
+            const container = document.getElementById('tasksContainer');
+
+            if (view === 'list') {
+                container.style.gridTemplateColumns = '1fr';
+            } else {
+                container.style.gridTemplateColumns = 'repeat(auto-fill, minmax(300px, 1fr))';
+            }
+        });
+    });
+
+    // Card hover effects
+    document.querySelectorAll('.enhanced-stat-card').forEach(card => {
+        card.addEventListener('mouseenter', function() {
+            const pulse = this.querySelector('.icon-pulse');
+            if (pulse) {
+                pulse.style.animationDuration = '1s';
+            }
+        });
+
+        card.addEventListener('mouseleave', function() {
+            const pulse = this.querySelector('.icon-pulse');
+            if (pulse) {
+                pulse.style.animationDuration = '2s';
+            }
+        });
+    });
+</script>
+
+<style>
+@keyframes slideInUp {
+    from {
+        opacity: 0;
+        transform: translateY(30px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.premium-stat-card, .insight-card {
+    opacity: 0;
+}
+
+.premium-stat-icon {
+    transition: transform 0.3s ease;
+}
+</style>
+{% endblock %}
